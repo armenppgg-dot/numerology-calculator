@@ -4,21 +4,78 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Нумерологический калькулятор</title>
+  <style>
+    body { font-family: -apple-system, system-ui, Arial; padding: 20px; max-width: 720px; margin: 0 auto; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 16px; margin-top: 14px; }
+    label { display:block; margin-top: 10px; font-weight: 600; }
+    input { width: 100%; padding: 12px; margin-top: 6px; border-radius: 10px; border: 1px solid #ccc; }
+    button { margin-top: 14px; width: 100%; padding: 12px; border: 0; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .row { display:flex; gap:12px; flex-wrap: wrap; }
+    .col { flex: 1 1 220px; }
+    .num { font-size: 26px; font-weight: 800; }
+    .small { color: #555; }
+    .warn { color: #b00020; font-weight: 600; margin-top: 10px; }
+  </style>
 </head>
 <body>
-  <h1>Калькулятор числа судьбы</h1>
+  <h1>Нумерологический калькулятор</h1>
+  <p class="small">Считает 3 числа: жизненный путь (по дате), судьбы/выражения и души (по имени).</p>
 
-  <input id="dob" type="date" />
-  <button id="btn">Рассчитать</button>
-  <p id="out"></p>
+  <div class="card">
+    <label>Дата рождения</label>
+    <input id="dob" type="date" />
 
+    <label>Полное имя</label>
+    <input id="fullname" type="text" placeholder="Например: Ivan Ivanov или Иван Иванов" />
+
+    <button id="btn">Рассчитать</button>
+    <div id="warn" class="warn" style="display:none;"></div>
+  </div>
+
+  <div id="out" class="card" style="display:none;">
+    <div class="row">
+      <div class="col">
+        <div class="small">Жизненный путь</div>
+        <div id="lp" class="num">—</div>
+      </div>
+      <div class="col">
+        <div class="small">Судьба / выражение</div>
+        <div id="ex" class="num">—</div>
+      </div>
+      <div class="col">
+        <div class="small">Душа</div>
+        <div id="su" class="num">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- важно: подключаем твой calculator.js -->
   <script src="calculator.js"></script>
   <script>
-    document.getElementById('btn').addEventListener('click', () => {
-      const v = document.getElementById('dob').value;
-      document.getElementById('out').textContent = v
-        ? `Ваше число судьбы: ${window.calcDestinyNumber(v)}`
-        : 'Введите дату рождения';
+    const $ = (id) => document.getElementById(id);
+
+    $("btn").addEventListener("click", () => {
+      const dateStr = $("dob").value;
+      const name = $("fullname").value.trim();
+
+      $("warn").style.display = "none";
+      $("out").style.display = "none";
+
+      if (!dateStr && !name) {
+        $("warn").textContent = "Введите дату и/или имя (лучше оба).";
+        $("warn").style.display = "block";
+        return;
+      }
+
+      const lp = dateStr ? window.numerology.lifePath(dateStr) : null;
+      const ex = name ? window.numerology.expression(name) : null;
+      const su = name ? window.numerology.soul(name) : null;
+
+      $("lp").textContent = lp ?? "—";
+      $("ex").textContent = ex ?? "—";
+      $("su").textContent = su ?? "—";
+
+      $("out").style.display = "block";
     });
   </script>
 </body>
