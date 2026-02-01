@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Нумерологический калькулятор</title>
+</head>
+<body>
+  <h1>Калькулятор числа судьбы</h1>
+
+  <input id="dob" type="date" />
+  <button id="btn">Рассчитать</button>
+  <p id="out"></p>
+
+  <script src="calculator.js"></script>
+  <script>
+    document.getElementById('btn').addEventListener('click', () => {
+      const v = document.getElementById('dob').value;
+      document.getElementById('out').textContent = v
+        ? `Ваше число судьбы: ${window.calcDestinyNumber(v)}`
+        : 'Введите дату рождения';
+    });
+  </script>
+</body>
+</html>
